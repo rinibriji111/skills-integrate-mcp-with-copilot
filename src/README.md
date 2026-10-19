@@ -5,7 +5,9 @@ A super simple FastAPI application that allows students to view and sign up for 
 ## Features
 
 - View all available extracurricular activities
-- Sign up for activities
+- Teacher sign-in to register and unregister students
+- Public read-only activity and participant listings
+- Persistent teacher credentials stored locally as password hashes
 
 ## Getting Started
 
@@ -30,7 +32,17 @@ A super simple FastAPI application that allows students to view and sign up for 
 | Method | Endpoint                                                          | Description                                                         |
 | ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
 | GET    | `/activities`                                                     | Get all activities with their details and current participant count |
-| POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
+| POST   | `/auth/login`                                                      | Sign in as a teacher                                                |
+| GET    | `/auth/me`                                                         | Get the signed-in teacher                                           |
+| POST   | `/auth/logout`                                                     | Sign out                                                            |
+| POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Teacher: sign up a student                                          |
+| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | Teacher: unregister a student                                    |
+
+## Teacher Accounts
+
+Create or replace a teacher account with `python src/create_teacher.py`. The script prompts for a username and password, then stores a PBKDF2 password hash in `src/teachers.json`. That local file is ignored by Git; do not commit real credentials. Set `TEACHERS_FILE` to use a different credential file.
+
+Students can view the activity list and participant emails without signing in. A teacher session expires after eight hours.
 
 ## Data Model
 
